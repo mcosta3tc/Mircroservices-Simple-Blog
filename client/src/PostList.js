@@ -12,10 +12,10 @@ export default () => {
 
     const fetchPosts = async () => {
         /**
+         * <== Query Service
          * axios resp => data{}
          */
-        const res =  await axios.get('http://localhost:4000/posts');
-
+        const res =  await axios.get('http://localhost:4002/posts');
         setPosts(res.data);
     }
 
@@ -30,8 +30,8 @@ export default () => {
     /**
      * Object.values = [] of all posts
      * map [posts] && foreach post => generate jsx
+     * <== posts
      */
-
     const renderedPost = Object.values(posts).map(post => {
         return (
                 /**
@@ -44,9 +44,9 @@ export default () => {
                     <div className='card-body'>
                         <h3>{post.title}</h3>
                         {/**
-                         Transferring the id of the post => CommentCreate prop
+                         comments <== post <== fetchPost() <== Query Service
                          */}
-                        <CommentList postId={post.postId}/>
+                        <CommentList comments={post.comments}/>
                         <CommentCreate postId={post.postId} />
                     </div>
                 </div>
