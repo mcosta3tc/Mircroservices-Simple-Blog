@@ -31,6 +31,7 @@ export default () => {
      * Object.values = [] of all posts
      * map [posts] && foreach post => generate jsx
      */
+
     const renderedPost = Object.values(posts).map(post => {
         return (
                 /**
@@ -39,14 +40,14 @@ export default () => {
                  *  - react expect a unique key property on each element created
                  *  - this key => id of the post
                  */
-                <div className="card" style={{width: '30%', marginBottom: '20px'}} key={post.id}>
+                <div className="card" style={{width: '30%', marginBottom: '20px'}} key={post.postId}>
                     <div className='card-body'>
                         <h3>{post.title}</h3>
                         {/**
                          Transferring the id of the post => CommentCreate prop
                          */}
-                        <CommentList postId={post.id}/>
-                        <CommentCreate postId={post.id} />
+                        <CommentList postId={post.postId}/>
+                        <CommentCreate postId={post.postId} />
                     </div>
                 </div>
         )
