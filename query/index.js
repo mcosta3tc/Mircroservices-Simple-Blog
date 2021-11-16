@@ -1,10 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const {log} = require('nodemon/lib/utils');
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 /**
  *
@@ -14,59 +15,78 @@ app.use(bodyParser.json())
  *        'title': 'the title',
  *        'comments' : [
  *            {
- *                'id' : '1542',
+ *                'commentId' : '1542',
  *                'content' : 'the comment'
  *            }
  *        ]
  *     }
  * }}
  */
-const posts = {}
+const posts = {};
 
 //<== posts{}
 app.get('/posts', (req, res) => {
     res.send(posts);
-})
+});
 
 /**
  * Endpoint <== EventBus
  * ==> post and his comment
  */
 app.post('/events', (req, res) => {
-    console.log(req.body);
     /*
-     * req ==> event properties
+     * req ==> event properties from EventBus (Broker)
      *  - type
      *  - {data}
      */
-    const {type , data} = req.body;
+    const {type, data} = req.body;
+
+    console.log(req.body);
 
     //Event : Post created
-    if(type === 'PostCreated'){
+    if(type === 'PostCreated') {
         //{post}
         const {postId, title} = data;
 
+        /**
+         * update this.posts with data
+         */
         posts[postId] = {
-            postId, title, comments : []
-        }
+            postId, title, comments: []
+        };
     }
 
-    if(type === 'CommentCreated'){
+    if(type === 'CommentCreated') {
         //{comment}
-        const {commentId, content, postId} = data;
+        const {commentId, content, postId, status} = data;
 
         //post <== {posts}
         const post = posts[postId];
 
         //comment => the post
-        post.comments.push({commentId, content})
+        post.comments.push({commentId, content, status});
     }
 
-    console.log('Posts : ', posts);
+    if(type === 'CommentUpdated') {
+        /**
+         * Find the comment from posts{}
+         */
+        const {commentId, postId, content, status} = data;
+        const post = posts[postId];
+        const comment = post.comments.find(comment => {
+            return comment.commentId === commentId;
+        });
 
-    res.send({})
-})
+        /**
+         * update the comment properties <== data
+         */
+        comment.status = status;
+        comment.content = content;
+    }
 
-app.listen(4002, ()=> {
+    res.send({});
+});
+
+app.listen(4002, () => {
     console.log('listening 4002');
-})
+});

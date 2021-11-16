@@ -1,4 +1,4 @@
-const express= require('express');
+const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
 
@@ -15,23 +15,27 @@ app.post('/events', (req, res) => {
      * event => Services
      */
     const events = req.body;
+    console.log(events);
 
     //Posts
     axios.post('http://localhost:4000/events', events);
 
     //Comments
-    axios.post('http://localhost:4001/events', events);
+    axios.post('http://localhost:4001/events', events).catch((err) => console.log(err.message));
 
     //Query
     axios.post('http://localhost:4002/events', events);
 
+    //Moderation
+    axios.post('http://localhost:4003/events', events);
+
     /**
      * foreach committed event send ok => worked
      */
-    res.send({status:'OK'});
+    res.send({status: 'OK'});
 });
 
-app.listen(4005, ()=>{
+app.listen(4005, () => {
     console.log('listening 4005');
-})
+});
 

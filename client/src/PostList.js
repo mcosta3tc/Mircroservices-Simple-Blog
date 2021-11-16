@@ -12,7 +12,7 @@ export default () => {
 
     const fetchPosts = async () => {
         /**
-         * <== Query Service
+         * posts <== Query Service
          * axios resp => data{}
          */
         const res =  await axios.get('http://localhost:4002/posts');
@@ -30,7 +30,7 @@ export default () => {
     /**
      * Object.values = [] of all posts
      * map [posts] && foreach post => generate jsx
-     * <== posts
+     * <== posts <== fetchPost() <== Query Service
      */
     const renderedPost = Object.values(posts).map(post => {
         return (
@@ -47,6 +47,7 @@ export default () => {
                          comments <== post <== fetchPost() <== Query Service
                          */}
                         <CommentList comments={post.comments}/>
+
                         <CommentCreate postId={post.postId} />
                     </div>
                 </div>
