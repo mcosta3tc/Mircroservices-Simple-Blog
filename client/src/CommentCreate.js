@@ -6,7 +6,7 @@ import axios from 'axios';
  *  - pass the id of the post => props
  *  - destructured obj ({postId}) => x1 property expected
  */
-export default ({postId}) => {
+const CommentCreated = ({postId}) => {
     /**
      * Track the content of the input
      */
@@ -19,12 +19,12 @@ export default ({postId}) => {
         event.preventDefault();
         await axios.post(`http://localhost:4001/posts/${postId}/comments`, {
             content
-        })
+        });
         /**
          * reset the value of the input after submit
          */
         setContent('');
-    }
+    };
 
 
     return (
@@ -35,10 +35,13 @@ export default ({postId}) => {
                         {/**
                          When user change the input => event => update state of content
                          */}
-                        <input value={content} onChange={event => setContent(event.target.value)} className="form-control"/>
+                        <input value={content} onChange={event => setContent(event.target.value)}
+                               className="form-control"/>
                     </div>
-                    <button type="submit" className='btn btn-primary'>Submit</button>
+                    <button type="submit" className="btn btn-primary">Submit</button>
                 </form>
             </div>
-    )
-}
+    );
+};
+
+export default CommentCreated;

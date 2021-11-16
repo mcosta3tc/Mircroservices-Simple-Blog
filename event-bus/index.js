@@ -6,6 +6,12 @@ const app = express();
 app.use(bodyParser.json());
 
 /**
+ * stores incoming events
+ *  most recent at the end
+ */
+const events = [];
+
+/**
  * Post handler => foreach event:
  *  - request to the different services servers
  */
@@ -14,25 +20,44 @@ app.post('/events', (req, res) => {
      * event = the body of request, of any kind (json, string, obj...)
      * event => Services
      */
-    const events = req.body;
-    console.log(events);
+    const event = req.body;
+
+    //store event
+    events.push(event);
+
+    console.log(event);
 
     //Posts
-    axios.post('http://localhost:4000/events', events);
+    axios.post('http://localhost:4000/events', event).catch((err) => {
+        console.log(err.message);
+    });
 
     //Comments
-    axios.post('http://localhost:4001/events', events).catch((err) => console.log(err.message));
+    axios.post('http://localhost:4001/events', event).catch((err) => {
+        console.log(err.message);
+    });
 
     //Query
-    axios.post('http://localhost:4002/events', events);
+    axios.post('http://localhost:4002/events', event).catch((err) => {
+        console.log(err.message);
+    });
 
     //Moderation
-    axios.post('http://localhost:4003/events', events);
+    axios.post('http://localhost:4003/events', event).catch((err) => {
+        console.log(err.message);
+    });
 
     /**
      * foreach committed event send ok => worked
      */
     res.send({status: 'OK'});
+});
+
+/**
+ * retrieve all the event, ever occurred
+ */
+app.get('/events', (req, res) => {
+    res.send(events);
 });
 
 app.listen(4005, () => {

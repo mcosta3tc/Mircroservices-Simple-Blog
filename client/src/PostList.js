@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import CommentCreate from './CommentCreate';
 import CommentList from './CommentList';
 
-export default () => {
+const PostList = () => {
     /**
      * {} in useState => post MS return an {} in the res.send
      */
@@ -15,17 +15,17 @@ export default () => {
          * posts <== Query Service
          * axios resp => data{}
          */
-        const res =  await axios.get('http://localhost:4002/posts');
+        const res = await axios.get('http://localhost:4002/posts');
         setPosts(res.data);
-    }
+    };
 
     /**
      * triggered at the launch of the component
      * [] => run this fn 1x
      */
-    useEffect(()=>{
-        fetchPosts()
-    }, [])
+    useEffect(() => {
+        fetchPosts();
+    }, []);
 
     /**
      * Object.values = [] of all posts
@@ -41,25 +41,27 @@ export default () => {
                  *  - this key => id of the post
                  */
                 <div className="card" style={{width: '30%', marginBottom: '20px'}} key={post.postId}>
-                    <div className='card-body'>
+                    <div className="card-body">
                         <h3>{post.title}</h3>
                         {/**
                          comments <== post <== fetchPost() <== Query Service
                          */}
                         <CommentList comments={post.comments}/>
 
-                        <CommentCreate postId={post.postId} />
+                        <CommentCreate postId={post.postId}/>
                     </div>
                 </div>
-        )
-    })
+        );
+    });
 
     /**
      * rendering the posts
      */
-    return(
-            <div className='d-flex flex-row flex-wrap justify-content-between'>
+    return (
+            <div className="d-flex flex-row flex-wrap justify-content-between">
                 {renderedPost}
             </div>
-    )
-}
+    );
+};
+
+export default PostList;

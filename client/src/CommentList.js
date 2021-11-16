@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default ({comments}) => {
+const CommentList = ({comments}) => {
 
     /**
      * Object.values = [] of all comments
@@ -47,4 +47,6 @@ export default ({comments}) => {
                 {renderedComments}
             </ul>
     );
-}
+};
+
+export default CommentList;
