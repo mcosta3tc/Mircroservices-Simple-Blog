@@ -1,0 +1,21 @@
+# Custom k8s obj def
+apiVersion: v1
+# Type of the obj
+# Pod ==> wrap containers
+kind: Pod
+# Config options for the created obj
+metadata:
+    # When created this pod name : posts
+    name: posts
+# List of configurations options ==> pod
+# Controls what's inside the pod and his behave
+spec:
+    # Array
+    # "-" new entity in the []
+    # We can create xContainer in a pod
+    containers:
+        # container name ==> posts
+        - name : posts
+          # Exact docker img we want to use
+          # version === k8s assume this image is on local ; !== (none or :latest) check on docker hub
+          image : ms-blog/posts:0.0.1
