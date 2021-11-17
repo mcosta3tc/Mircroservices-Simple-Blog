@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: posts-deployment
+    name: event-bus-deployment
 spec:
     replicas: 1
-    # Find Pods with the label app: posts
+    # Find Pods with the label app: event-bus
     selector:
         matchLabels:
             # label == key / value pair
-            # app !== special meaning it could be alezane: posts
+            # app !== special meaning it could be alezane: event-bus
             app: event-bus
     # Config of the pod we want to create
     template:
-        # === Pod => label : app: posts
+        # === Pod => label : app: event-bus
         metadata:
             labels:
                 app: event-bus
@@ -22,8 +22,8 @@ spec:
             # "-" new entity in the []
             # We can create xContainer in a pod
             containers:
-                # container name ==> posts
-                -   name: posts
+                # container name ==> event-bus
+                -   name: event-bus
                     # Exact docker img we want to use (:0.0.1)
                     # version === k8s assume this image is on local ; !== (none or :latest) check on docker hub
-                    image: msagres/ms-blog-posts
+                    image: msagres/ms-blog-event-bus

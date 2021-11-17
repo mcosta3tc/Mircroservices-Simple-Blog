@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+    # name of the service (k8s service)
+    name: posts-service
+spec:
+    # Expose set of pods to the outside world
+    type: NodePort
+    # find all pods with the label app: posts <== Deployment (template/metadata/labels)
+    selector:
+        app: event-bus
+    # list the ports needed to be exposed on the pod (index.js => port:4000)
+    # array of entries
+    # ==> port 4000 (node service) ==> targetPort 4000 (index.js)
+    ports:
+        - name: posts
+          protocol: TCP
+          # port of node k8s service
+          port: 4000
+          # port of index.js
+          targetPort: 4000
