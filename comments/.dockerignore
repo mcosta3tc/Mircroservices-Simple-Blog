@@ -1,0 +1,2 @@
+# Don't include depedencies of our local machine
+node_modules
