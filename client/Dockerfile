@@ -1,5 +1,7 @@
 # Specify base image
-FROM node:alpine
+FROM node:16-alpine
+
+ENV CI=true
 
 # Set the working directory to '/app' in the container
 # All following cmd === relative to this dir
@@ -10,11 +12,11 @@ WORKDIR /app
 COPY ./package.json ./
 
 # Install depedencies
-RUN npm install
+RUN yarn install
 
 # Copy ==> /app
 #  - all remaining source code (evryth else from /post dir)
 COPY ./ ./
 
 # The cmd to run when the container start up
-CMD ["npm","start"]
+CMD ["yarn","start"]

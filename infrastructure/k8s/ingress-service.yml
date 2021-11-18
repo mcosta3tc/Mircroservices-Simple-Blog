@@ -1,6 +1,6 @@
 # Ingress controller - IC
 # Load Balancer => Ingress controller => Find the routes for the pods
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
     name: ingress-service
@@ -9,15 +9,51 @@ metadata:
     #   find ones who have this annotation (nginx)
     annotations:
         kubernetes.io/ingress.class: nginx
+        # Enable Regexes
+        nginx.ingress.kubernetes.io/use-regex: 'true'
 spec:
     # routing rules for the incoming traffic ==> pods (clusterIp Service)
     rules:
         -   host: posts.com
             http:
+                # Greatest importance to lowest
+                # IC 1rst try 1 => 2 => ...
                 paths:
-                    # Front ==> Post Service (http://.../posts)
-                    -   path: /posts
+                    # Front ==> Post Posts Service (http://.../posts/create)
+                    -   path: /posts/create
+                        pathType: Prefix
                         backend:
-                            # ClusterIP name and port
-                            serviceName: posts-clusterip-service
-                            servicePort: 4000
+                            service:
+                                # ClusterIP name and port
+                                name: posts-clusterip-service
+                                port:
+                                    number: 4000
+                    # Front ==> Get Query Service (http://.../posts)
+                    -   path: /posts
+                        pathType: Prefix
+                        backend:
+                            service:
+                                # ClusterIP name and port
+                                name: query-service
+                                port:
+                                    number: 4002
+                    # Front ==> Post Comments Service (http://.../posts/:id/comments)
+                    # RegEx to match all bcz IC can't read params
+                    -   path: /posts/?(.*)/comments
+                        pathType: Prefix
+                        backend:
+                            service:
+                                # ClusterIP name and port
+                                name: comments-service
+                                port:
+                                    number: 4001
+                    # Front ==> Client Service (http://.../posts/)
+                    # RegEx to match all bcz IC can't read params
+                    -   path: /?(.*)
+                        pathType: Prefix
+                        backend:
+                            service:
+                                # ClusterIP name and port
+                                name: client-service
+                                port:
+                                    number: 3000

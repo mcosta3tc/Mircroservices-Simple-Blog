@@ -10,11 +10,11 @@ WORKDIR /app
 COPY ./package.json ./
 
 # Install depedencies
-RUN npm install
+RUN yarn install
 
 # Copy ==> /app
 #  - all remaining source code (evryth else from /post dir)
 COPY ./ ./
 
 # The cmd to run when the container start up
-CMD ["npm","start"]
+CMD ["yarn","start"]

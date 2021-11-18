@@ -17,7 +17,8 @@ const CommentCreated = ({postId}) => {
      */
     const onsubmit = async (event) => {
         event.preventDefault();
-        await axios.post(`http://localhost:4001/posts/${postId}/comments`, {
+        // ? => k8s ==> Ingress Controller (posts.com)
+        await axios.post(`http://posts.com/posts/${postId}/comments`, {
             content
         });
         /**
