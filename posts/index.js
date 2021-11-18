@@ -19,19 +19,20 @@ app.post('/posts', (async (req, res) => {
     const {title} = req.body;
 
     posts[postId] = {
-        postId,title
-    }
+        postId, title
+    };
 
     /**
      * Event emitted => event bus
+     * Reaching K8s pod by his service name and port
      */
-    await axios.post('http://localhost:4005/events', {
-        type : 'PostCreated',
-        data : {
+    await axios.post('http://event-bus-service:4005/events', {
+        type: 'PostCreated',
+        data: {
             postId,
             title
         }
-    })
+    });
 
     res.status(201).send(posts[postId]);
 }));
@@ -41,8 +42,8 @@ app.post('/posts', (async (req, res) => {
  */
 app.post('/events', (req, res) => {
     console.log('Received event : ', req.body.type);
-    res.send({status: 'Ok'})
-})
+    res.send({status: 'Ok'});
+});
 
 app.listen(4000, () => {
     console.log('v2');

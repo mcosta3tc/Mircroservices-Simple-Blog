@@ -1,3 +1,5 @@
+# kubectl apply -f ....
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -27,3 +29,28 @@ spec:
                     # Exact docker img we want to use (:0.0.1)
                     # version === k8s assume this image is on local ; !== (none or :latest) check on docker hub
                     image: msagres/ms-blog-event-bus
+# Custer IP def
+---
+apiVersion: v1
+kind: Service
+metadata:
+    # name of the service (k8s service)
+    name: event-bus-service
+spec:
+    # Expose set of pods to the outside world
+    # By default ClusterIP if non type is set
+    # type: ClusterIP
+    #
+    # find all pods with the label app: posts <== Deployment (template/metadata/labels)
+    selector:
+        app: event-bus
+    # list the ports needed to be exposed on the pod (index.js => port:4000)
+    # array of entries
+    # ==> port 4000 (node service) ==> targetPort 4000 (index.js)
+    ports:
+        -   name: event-bus
+            protocol: TCP
+            # port of node k8s service
+            port: 4005
+            # port of index.js
+            targetPort: 4005

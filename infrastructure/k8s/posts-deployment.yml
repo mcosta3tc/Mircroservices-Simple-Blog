@@ -1,3 +1,5 @@
+# kubectl apply -f ...
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -9,13 +11,13 @@ spec:
         matchLabels:
             # label == key / value pair
             # app !== special meaning it could be alezane: posts
-            app: event-bus
+            app: posts
     # Config of the pod we want to create
     template:
         # === Pod => label : app: posts
         metadata:
             labels:
-                app: event-bus
+                app: posts
         # config of the pod ~~ config file pod
         spec:
             # Array
@@ -27,3 +29,24 @@ spec:
                     # Exact docker img we want to use (:0.0.1)
                     # version === k8s assume this image is on local ; !== (none or :latest) check on docker hub
                     image: msagres/ms-blog-posts
+# ClusterIP def
+---
+apiVersion: v1
+kind: Service
+metadata:
+    # name of the service (k8s service)
+    name: posts-clusterip-service
+spec:
+    # find all pods with the label app: posts <== Deployment (template/metadata/labels)
+    selector:
+        app: posts
+    # list the ports needed to be exposed on the pod (index.js => port:4000)
+    # array of entries
+    # ==> port 4000 (node service) ==> targetPort 4000 (index.js)
+    ports:
+        -   name: posts
+            protocol: TCP
+            # port of node k8s service
+            port: 4000
+            # port of index.js
+            targetPort: 4000
