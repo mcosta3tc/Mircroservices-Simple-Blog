@@ -1,0 +1,23 @@
+# Ingress controller - IC
+# Load Balancer => Ingress controller => Find the routes for the pods
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+    name: ingress-service
+    # Help IC feeding some routing rules
+    # IC scan all the object / config file on the cluster :
+    #   find ones who have this annotation (nginx)
+    annotations:
+        kubernetes.io/ingress.class: nginx
+spec:
+    # routing rules for the incoming traffic ==> pods (clusterIp Service)
+    rules:
+        -   host: posts.com
+            http:
+                paths:
+                    # Front ==> Post Service (http://.../posts)
+                    -   path: /posts
+                        backend:
+                            # ClusterIP name and port
+                            serviceName: posts-clusterip-service
+                            servicePort: 4000
