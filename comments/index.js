@@ -42,7 +42,7 @@ app.post('/posts/:id/comments', async (req, res) => {
     /**
      * Event emitted => event bus
      */
-    await axios.post('http://localhost:4005/events', {
+    await axios.post('http://event-bus-service:4005/events', {
         type: 'CommentCreated',
         data: {
             commentId,
@@ -86,7 +86,7 @@ app.post('/events', async (req, res) => {
          * Send the updated comment => EventBus
          * shorthand => data : obj already received from req.body
          */
-        await axios.post('http://localhost:4005/events', {
+        await axios.post('http://event-bus-service:4005/events', {
             type: 'CommentUpdated',
             data: {
                 commentId,

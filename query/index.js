@@ -103,7 +103,7 @@ app.listen(4002, async () => {
          * on start query service : req => eventBus
          *  - => list events that have been emitted at this point in time
          */
-        const res = await axios.get('http://localhost:4005/events');
+        const res = await axios.get('http://event-bus-service:4005/events');
 
         /**
          * interring over events
