@@ -1,0 +1,66 @@
+# Skaffold (SK) => Manage subprojects => k8s Cluster
+apiVersion: skaffold/v2alpha3
+kind: Config
+# Collection of != k8s config files in ./infrastructure/k8s/
+deploy:
+    kubectl:
+        #  SK start => apply files / watch files : 1 change => Cluster === kubectl apply -f . / SK stop => find this objs and del them in the Cluster
+        manifests:
+            - ./infrastructure/k8s/*
+build:
+    local:
+        # Default : SK build images its try to push to DockerHub
+        push: false
+    artifacts:
+          # Docker image
+        - image: msagres/ms-blog-client
+          # Dir
+          context: client
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  # watch js files ==> Pod
+                  # else than js inside src SK ==> rebuild the image and update the Deployment file
+                  - src: 'src/**/*.js'
+                    dest: .
+        - image: msagres/ms-blog-comments
+          context: comments
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: '*.js'
+                    dest: .
+        - image: msagres/ms-blog-event-bus
+          context: event-bus
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: '*.js'
+                    dest: .
+        - image: msagres/ms-blog-moderation
+          context: moderation
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: '*.js'
+                    dest: .
+        - image: msagres/ms-blog-posts
+          context: posts
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: '*.js'
+                    dest: .
+        - image: msagres/ms-blog-query
+          context: query
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: '*.js'
+                    dest: .
